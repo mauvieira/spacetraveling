@@ -1,3 +1,4 @@
+import Header from "../components/Header";
 // import { GetStaticProps } from 'next';
 
 // import { getPrismicClient } from '../services/prismic';
@@ -25,7 +26,7 @@
 // }
 
 export default function Home() {
-  return <h1>Home</h1>
+  return (<Header />)
 }
 
 // export const getStaticProps = async () => {
