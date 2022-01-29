@@ -1,1 +1,28 @@
-// TODO
+.post {
+  margin: 2rem 0;
+
+  h2 {
+    font-size: 1.75rem;
+    line-height: 2rem;
+    color: var(--heading);
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0.5rem 0 1.5rem 0;
+  }
+
+}
+
+.info {
+  span + span {
+    margin-left: 1rem;
+  }
+}
+
+.loadMore {
+  font-weight: 700;
+  color: var(--highlight);
+  background: none;
+  border: none;
+}
