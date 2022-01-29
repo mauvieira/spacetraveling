@@ -6,7 +6,7 @@ import { getPrismicClient } from '../../services/prismic';
 import Header from "../../components/Header";
 import Prismic from '@prismicio/client';
 
-import { format, minutesToHours } from 'date-fns';
+import { minutesToHours } from 'date-fns';
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 import { formatDate } from '../../util/formatDate';
@@ -60,29 +60,32 @@ export default function Post(props: PostProps) {
     }
   } = post;
 
-  function calculateReadingTime(content: Content[]): string {
-    const getHeadingWordsPerMinutes = content.reduce((acc, currentValue) => {
-      return currentValue.heading.split(/\s+/).length + acc;
+  const calculateReadingTime = (content: Content[]) => {
+    const headingWordsPerMinutes = content.reduce((accumulator, { heading }) => {
+      return heading.split(/\s+/).length + accumulator;
     }, 0);
 
-    const getBodyWordsPerMinutes = content.reduce((acc, currentValue) => {
-      return RichText.asText(currentValue.body).split(/\s+/).length + acc;
+    const bodyWordsPerMinutes = content.reduce((accumulator, { body }) => {
+      return RichText.asText(body).split(/\s+/).length + accumulator;
     }, 0);
 
-    const getWordsPerMinutes = Math.ceil(
-      (getHeadingWordsPerMinutes + getBodyWordsPerMinutes) / 200
+    const wordsPerMinutes = Math.ceil(
+      (headingWordsPerMinutes + bodyWordsPerMinutes) / 200
     );
 
-    if (getWordsPerMinutes < 1) {
+    if (wordsPerMinutes < 1) {
       return 'Rápida leitura';
     }
 
-    if (getWordsPerMinutes < 60) {
-      return `${getWordsPerMinutes} min`;
+    if (wordsPerMinutes < 60) {
+      return `${wordsPerMinutes} min`;
     }
 
-    return `${minutesToHours(getBodyWordsPerMinutes)} horas`;
+    return `${minutesToHours(bodyWordsPerMinutes)} horas`;
   }
+
+  const readingTime = calculateReadingTime(content);
+  const date = formatDate(first_publication_date);
 
   return (
     <>
@@ -94,25 +97,24 @@ export default function Post(props: PostProps) {
 
       <img src={url} alt="" />
 
-      <p>{formatDate(first_publication_date)}</p>
+      <p>{date}</p>
       <h1>{title}</h1>
       <p>{author}</p>
 
       <span>
-        {calculateReadingTime(post.data.content)}
+        {readingTime}
       </span>
 
       <section>
-        {content.map(content => (
-          <div key={content.heading}>
-            <h1>{content.heading}</h1>
+        {content.map(({ heading, body }) => (
+          <article key={heading}>
+            <h1>{heading}</h1>
             <div
-              // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
-                __html: RichText.asHtml(content.body),
+                __html: RichText.asHtml(body),
               }}
             />
-          </div>
+          </article>
         ))}
       </section>
     </>
@@ -153,9 +155,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         url: response.data.banner.url ?? '',
       },
       author: response.data.author,
-      content: response.data.content.map(content => ({
-        heading: content.heading,
-        body: content.body,
+      content: response.data.content.map(({ heading, body }) => ({
+        heading: heading,
+        body: body,
       })),
     },
     uid: response.uid,
