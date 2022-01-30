@@ -38,15 +38,10 @@ export default function Home(props: HomeProps) {
   const [posts, setPosts] = useState<Post[]>(results);
   const [nextPage, setNextPage] = useState<string | null>(next_page);
 
-  console.log('next page atual', next_page)
-
   const handleLoadMore = async () => {
     const response = await fetch(nextPage);
     const responseJson = await response.json();
     const newPosts = [...posts, ...responseJson.results];
-
-    console.log('responseJson', responseJson);
-    console.log('next page', responseJson.next_page)
 
     setNextPage(responseJson.next_page);
     setPosts(newPosts);
