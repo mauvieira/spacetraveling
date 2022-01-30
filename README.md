@@ -31,7 +31,6 @@ This project was developed at the [Rocketseat Ignite Bootcamp](https://www.rocke
 -  [utterances](https://utteranc.es/)
 -  [Jest](https://jestjs.io/)
 -  [sass](https://sass-lang.com/)
--  [axios](https://github.com/axios/axios)
 -  [VS Code](https://code.visualstudio.com/)
 
 ## ℹ️ How to use
