@@ -5,10 +5,14 @@ import Head from 'next/head';
 import { getPrismicClient } from '../../services/prismic';
 import Header from "../../components/Header";
 import Prismic from '@prismicio/client';
+import { FiCalendar, FiUser, FiClock } from "react-icons/fi";
 
 import { minutesToHours } from 'date-fns';
 import { formatDate } from '../../util/formatDate';
 import { RichText } from 'prismic-dom';
+
+import styles from './post.module.scss';
+import commonStyles from '../../styles/common.module.scss';
 
 interface Post {
   first_publication_date: string | null;
@@ -84,31 +88,35 @@ export default function Post(props: PostProps) {
   return (
     <>
       <Head>
-        <title>Spacetraveling</title>
+        <title>{title} | Spacetraveling</title>
       </Head>
 
       <Header />
 
-      <img src={url} alt={`${title} - banner`} />
+      <img className={styles.banner} src={url} alt={`${title} - banner`} />
 
-      <p>{first_publication_date}</p>
-      <h1>{title}</h1>
-      <p>{author}</p>
-
-      <span>{readingTime}</span>
-
-      <section>
-        {content.map(({ heading, body }) => (
-          <article key={heading}>
-            <h1>{heading}</h1>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: RichText.asHtml(body),
-              }}
-            />
-          </article>
-        ))}
-      </section>
+      <main className={commonStyles.container}>
+        <div className={styles.container}>
+          <h1>{title}</h1>
+          <div className={styles.info}>
+            <span><FiCalendar />{first_publication_date}</span>
+            <span><FiUser /> {author}</span>
+            <span><FiClock />{readingTime}</span>
+          </div>
+          <section className={styles.postWrapper}>
+            {content.map(({ heading, body }) => (
+              <article className={styles.post} key={heading}>
+                <h2>{heading}</h2>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: RichText.asHtml(body),
+                  }}
+                />
+              </article>
+            ))}
+          </section>
+        </div>
+      </main>
     </>
   )
 }
