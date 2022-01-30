@@ -61,7 +61,11 @@ export default function Post(props: PostProps) {
   } = post;
 
   const headingWordsPerMinutes = content.reduce((accumulator, { heading }) => {
-    return heading?.split(/\s+/).length + accumulator;
+
+    const length = heading?.split(/\s+/).length;
+
+    return length ? length + accumulator : accumulator;
+
   }, 0);
 
   const bodyWordsPerMinutes = content.reduce((accumulator, { body }) => {
@@ -69,7 +73,7 @@ export default function Post(props: PostProps) {
   }, 0);
 
   const wordsPerMinutes = Math.ceil(
-    (headingWordsPerMinutes + bodyWordsPerMinutes) / 200
+    (+headingWordsPerMinutes + +bodyWordsPerMinutes) / 200
   );
 
   const calculateReadingTime = () => {
