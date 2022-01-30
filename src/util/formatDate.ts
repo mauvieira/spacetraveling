@@ -1,18 +1,18 @@
 import { format } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
+import enUS from 'date-fns/locale/en-US';
 
 export const formatDate = (date: string) => format(
   new Date(date),
   "d MMM yyyy",
   {
-    locale: ptBR,
+    locale: enUS,
   }
 );
 
 export const formatDateWithHours = (date: string) => format(
   new Date(date),
-  "d MMM yyyy, 'às' H:m",
+  "d MMM yyyy, H:m",
   {
-    locale: ptBR,
+    locale: enUS,
   }
 );

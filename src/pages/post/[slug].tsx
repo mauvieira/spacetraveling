@@ -86,14 +86,14 @@ export default function Post(props: PostProps) {
 
   const calculateReadingTime = () => {
     if (wordsPerMinutes < 1) {
-      return 'Rápida leitura';
+      return 'Fast reading';
     }
 
     if (wordsPerMinutes < 60) {
       return `${wordsPerMinutes} min`;
     }
 
-    return `${minutesToHours(wordsPerMinutes)} horas`;
+    return `${minutesToHours(wordsPerMinutes)} hours`;
   }
 
   const readingTime = calculateReadingTime();
@@ -127,7 +127,7 @@ export default function Post(props: PostProps) {
             <span><FiUser /> {author}</span>
             <span><FiClock />{readingTime}</span>
           </div>
-          <span className={styles.edit}>* editado em {last_publication_date}</span>
+          <span className={styles.edit}>* edited {last_publication_date}</span>
           <section className={styles.postWrapper}>
             {content.map(({ heading, body }) => (
               <article className={styles.post} key={heading}>
@@ -147,7 +147,7 @@ export default function Post(props: PostProps) {
                 <Link href={`/post/${previous_post.slug}`}>
                   <a>
                     {previous_post.title}
-                    <span>Post anterior</span>
+                    <span>Previous post</span>
                   </a>
                 </Link>
               }
@@ -157,7 +157,7 @@ export default function Post(props: PostProps) {
                 <Link href={`/post/${next_post.slug}`}>
                   <a>
                     {next_post.title}
-                    <span>Próximo post</span>
+                    <span>Next post</span>
                   </a>
                 </Link>
               }

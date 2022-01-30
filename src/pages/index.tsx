@@ -70,7 +70,7 @@ export default function Home(props: HomeProps) {
           </article>
         ))}
 
-        {nextPage && <button onClick={handleLoadMore} className={styles.loadMore}>Carregar mais posts</button>}
+        {nextPage && <button onClick={handleLoadMore} className={styles.loadMore}>Load more posts</button>}
       </main>
     </>
   )
