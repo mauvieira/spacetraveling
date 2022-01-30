@@ -7,8 +7,6 @@ import Header from "../../components/Header";
 import Prismic from '@prismicio/client';
 
 import { minutesToHours } from 'date-fns';
-import commonStyles from '../../styles/common.module.scss';
-import styles from './post.module.scss';
 import { formatDate } from '../../util/formatDate';
 import { RichText } from 'prismic-dom';
 
@@ -27,13 +25,6 @@ interface Post {
       }[];
     }[];
   };
-}
-
-interface Content {
-  heading: string;
-  body: {
-    text: string;
-  }[];
 }
 
 interface PostProps {
