@@ -73,7 +73,7 @@ export default function Post(props: PostProps) {
   }, 0);
 
   const wordsPerMinutes = Math.ceil(
-    (+headingWordsPerMinutes + +bodyWordsPerMinutes) / 200
+    (headingWordsPerMinutes + bodyWordsPerMinutes) / 200
   );
 
   const calculateReadingTime = () => {
