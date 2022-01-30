@@ -95,7 +95,7 @@ export default function Post(props: PostProps) {
 
       <Header />
 
-      <img src={url} alt="" />
+      <img src={url} alt={`${title} banner`} />
 
       <p>{date}</p>
       <h1>{title}</h1>
