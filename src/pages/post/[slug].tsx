@@ -85,7 +85,7 @@ export default function Post(props: PostProps) {
       return `${wordsPerMinutes} min`;
     }
 
-    return `${minutesToHours(bodyWordsPerMinutes)} horas`;
+    return `${minutesToHours(wordsPerMinutes)} horas`;
   }
 
   const readingTime = calculateReadingTime();
