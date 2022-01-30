@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
-
-import { getPrismicClient } from '../../services/prismic';
-import Header from "../../components/Header";
+import { useRouter } from 'next/router';
 import Prismic from '@prismicio/client';
+import { RichText } from 'prismic-dom';
+import { minutesToHours } from 'date-fns';
 import { FiCalendar, FiUser, FiClock } from "react-icons/fi";
 
-import { minutesToHours } from 'date-fns';
+import { getPrismicClient } from '../../services/prismic';
 import { formatDate } from '../../util/formatDate';
-import { RichText } from 'prismic-dom';
+
+import Header from "../../components/Header";
 
 import styles from './post.module.scss';
 import commonStyles from '../../styles/common.module.scss';
