@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Prismic from '@prismicio/client';
@@ -8,15 +9,23 @@ import { minutesToHours } from 'date-fns';
 import { FiCalendar, FiUser, FiClock } from "react-icons/fi";
 
 import { getPrismicClient } from '../../services/prismic';
-import { formatDate } from '../../util/formatDate';
+import { formatDate, formatDateWithHours } from '../../util/formatDate';
 
 import Header from "../../components/Header";
 
 import styles from './post.module.scss';
 import commonStyles from '../../styles/common.module.scss';
 
+type PostLink = {
+  slug: string;
+  title: string;
+}
+
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
+  next_post: PostLink | null;
+  previous_post: PostLink | null;
   data: {
     title: string;
     banner: {
@@ -48,6 +57,9 @@ export default function Post(props: PostProps) {
 
   const {
     first_publication_date,
+    last_publication_date,
+    next_post,
+    previous_post,
     data: {
       title,
       banner: { url },
@@ -115,6 +127,7 @@ export default function Post(props: PostProps) {
             <span><FiUser /> {author}</span>
             <span><FiClock />{readingTime}</span>
           </div>
+          <span className={styles.edit}>* editado em {last_publication_date}</span>
           <section className={styles.postWrapper}>
             {content.map(({ heading, body }) => (
               <article className={styles.post} key={heading}>
@@ -127,6 +140,29 @@ export default function Post(props: PostProps) {
               </article>
             ))}
           </section>
+
+          <footer className={styles.footer}>
+            <div>
+              {previous_post &&
+                <Link href={`/post/${previous_post.slug}`}>
+                  <a>
+                    {previous_post.title}
+                    <span>Post anterior</span>
+                  </a>
+                </Link>
+              }
+            </div>
+            <div>
+              {next_post &&
+                <Link href={`/post/${next_post.slug}`}>
+                  <a>
+                    {next_post.title}
+                    <span>Próximo post</span>
+                  </a>
+                </Link>
+              }
+            </div>
+          </footer>
         </div>
       </main>
 
@@ -160,6 +196,24 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const prismic = getPrismicClient();
   const response = await prismic.getByUID('posts', String(slug), {});
+  const posts = await prismic.query(
+    [Prismic.Predicates.at('document.type', 'posts')],
+    {
+      fetch: ['posts.uid', 'posts.title'],
+    }
+  );
+
+  const slugsWithTitle = posts.results.map(result => ({
+    slug: result.uid,
+    title: result.data.title
+  }));
+
+  const slugs = posts.results.map(result => result.uid);
+
+  const postPosition = slugs.indexOf(String(slug));
+
+  const next_post = slugsWithTitle[postPosition + 1] ?? null;
+  const previous_post = slugsWithTitle[postPosition - 1] ?? null;
 
   const post = {
     data: {
@@ -176,6 +230,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
     uid: response.uid,
     first_publication_date: formatDate(response.first_publication_date),
+    last_publication_date: formatDateWithHours(response.last_publication_date),
+    next_post,
+    previous_post
   } as Post;
 
   return {

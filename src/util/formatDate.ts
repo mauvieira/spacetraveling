@@ -8,3 +8,11 @@ export const formatDate = (date: string) => format(
     locale: ptBR,
   }
 );
+
+export const formatDateWithHours = (date: string) => format(
+  new Date(date),
+  "d MMM yyyy, 'às' H:m",
+  {
+    locale: ptBR,
+  }
+);
