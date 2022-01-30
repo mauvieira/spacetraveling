@@ -60,19 +60,19 @@ export default function Post(props: PostProps) {
     }
   } = post;
 
-  const calculateReadingTime = (content: Content[]) => {
-    const headingWordsPerMinutes = content.reduce((accumulator, { heading }) => {
-      return heading.split(/\s+/).length + accumulator;
-    }, 0);
+  const headingWordsPerMinutes = content.reduce((accumulator, { heading }) => {
+    return heading?.split(/\s+/).length + accumulator;
+  }, 0);
 
-    const bodyWordsPerMinutes = content.reduce((accumulator, { body }) => {
-      return RichText.asText(body).split(/\s+/).length + accumulator;
-    }, 0);
+  const bodyWordsPerMinutes = content.reduce((accumulator, { body }) => {
+    return RichText.asText(body)?.split(/\s+/).length + accumulator;
+  }, 0);
 
-    const wordsPerMinutes = Math.ceil(
-      (headingWordsPerMinutes + bodyWordsPerMinutes) / 200
-    );
+  const wordsPerMinutes = Math.ceil(
+    (headingWordsPerMinutes + bodyWordsPerMinutes) / 200
+  );
 
+  const calculateReadingTime = () => {
     if (wordsPerMinutes < 1) {
       return 'Rápida leitura';
     }
@@ -84,8 +84,7 @@ export default function Post(props: PostProps) {
     return `${minutesToHours(bodyWordsPerMinutes)} horas`;
   }
 
-  const readingTime = calculateReadingTime(content);
-  const date = formatDate(first_publication_date);
+  const readingTime = calculateReadingTime();
 
   return (
     <>
@@ -95,15 +94,13 @@ export default function Post(props: PostProps) {
 
       <Header />
 
-      <img src={url} alt={`${title} banner`} />
+      <img src={url} alt={`${title} - banner`} />
 
-      <p>{date}</p>
+      <p>{first_publication_date}</p>
       <h1>{title}</h1>
       <p>{author}</p>
 
-      <span>
-        {readingTime}
-      </span>
+      <span>{readingTime}</span>
 
       <section>
         {content.map(({ heading, body }) => (
@@ -161,12 +158,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       })),
     },
     uid: response.uid,
-    first_publication_date: response.first_publication_date,
+    first_publication_date: formatDate(response.first_publication_date),
   } as Post;
 
   return {
     props: {
       post
-    }
+    },
+    revalidate: 60 * 30,
   }
 };
